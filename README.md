@@ -1,1 +1,3 @@
-# Vanila-Redux
+# Vanila Redux
+
+Learning Vanilla Redux and React Redux
