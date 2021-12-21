@@ -1,63 +1,61 @@
 import { createStore } from "redux";
 
-const add = document.getElementById("add");
-const minus = document.getElementById("minus");
-const number = document.querySelector("span");
+const form = document.querySelector("form");
+const input = document.querySelector("input");
+const ul = document.querySelector("ul");
 
-const ADD = "ADD";
-const MINUS = "MINUS";
+const ADD_TODO = "ADD_TODO";
+const DELETE_TODO = "DELETE_TODO";
 
-const countModifier = (state = 0, action) => {
-  // console.log(state, action);
+const reducer = (state = [], action) => {
+  console.log(state, action);
   switch (action.type) {
-    case ADD:
-      return state + 1;
-    case MINUS:
-      return state - 1;
+    case ADD_TODO:
+      return [...state, { text: action.text, id: Date.now() }];
+    case DELETE_TODO:
+      return [];
     default:
-      return state;
+      return [];
   }
 };
 
-const countStore = createStore(countModifier); //reducer를 "함수"로 넘겨줌
+const store = createStore(reducer);
 
-const onChange = () => {
-  number.innerText = countStore.getState();
-  console.log(countStore.getState());
+store.subscribe(() => {
+  console.log(store.getState());
+});
+
+const paintToDos = () => {
+  const toDos = store.getState();
+  toDos.forEach((toDo) => {
+    const li = document.createElement("li");
+  });
 };
 
-countStore.subscribe(onChange);
+store.subscribe(paintToDos);
 
-const handleAdd = () => {
-  countStore.dispatch({ type: ADD });
+const addToDo = (text) => {
+  store.dispatch({ type: ADD_TODO, text: text });
 };
 
-const handleMinus = () => {
-  countStore.dispatch({ type: MINUS });
+const onSubmit = (e) => {
+  e.preventDefault();
+  const toDo = input.value;
+  input.value = "";
+  //   createToDo(toDo);
+  addToDo(toDo);
 };
 
-add.addEventListener("click", handleAdd);
-minus.addEventListener("click", handleMinus);
-
+form.addEventListener("submit", onSubmit);
 /*
-let count = 0; // 유일하게 바뀌는 data
 
-number.innerText = count;
 
-const updateText = () => {
-  number.innerText = count;
+const createToDo = (toDo) => {
+  const li = document.createElement("li");
+  li.innerText = toDo;
+  ul.appendChild(li);
 };
 
-const handleAdd = () => {
-  count += 1;
-  updateText();
-};
 
-const handleMinus = () => {
-  count -= 1;
-  updateText();
-};
 
-add.addEventListener("click", handleAdd);
-minus.addEventListener("click", handleMinus);
 */
